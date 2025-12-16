@@ -1,0 +1,27 @@
+# Part metadata for sample.mmd
+# Maps node IDs to part information
+
+A:
+  part_number: "INA238AIDGSR"
+  link: "https://www.ti.com/product/INA238"
+  cost: 2.85
+
+B:
+  part_number: "MT3608"
+  link: "https://www.amazon.com/dp/B07XXXXX"
+  cost: 5.99
+
+C:
+  part_number: "TB-2504"
+  link: "https://www.digikey.com/..."
+  cost: 1.50
+
+n1:
+  part_number: "SC0918"
+  link: "https://www.raspberrypi.com/products/raspberry-pi-pico-2/"
+  cost: 5.00
+
+n15:
+  part_number: "LM2596"
+  link: "https://www.amazon.com/dp/..."
+  cost: 3.50
