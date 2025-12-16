@@ -1,7 +1,5 @@
 """Custom exceptions for blockbom."""
 
-from typing import Optional
-
 
 class BlockBomError(Exception):
     """Base exception for blockbom."""
@@ -12,7 +10,7 @@ class BlockBomError(Exception):
 class ParseError(BlockBomError):
     """Error during Mermaid parsing."""
 
-    def __init__(self, message: str, line_number: Optional[int] = None):
+    def __init__(self, message: str, line_number: int | None = None):
         self.line_number = line_number
         if line_number is not None:
             super().__init__(f"Line {line_number}: {message}")

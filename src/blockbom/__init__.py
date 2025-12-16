@@ -12,7 +12,6 @@ Example usage:
 """
 
 from pathlib import Path
-from typing import Optional
 
 from .exceptions import BlockBomError, InvalidDiagramError, MetadataError, ParseError
 from .exporter import CSVExporter
@@ -45,7 +44,7 @@ __all__ = [
 def generate_bom(
     mermaid_file: Path | str,
     output_file: Path | str,
-    metadata_file: Optional[Path | str] = None,
+    metadata_file: Path | str | None = None,
 ) -> list[BOMItem]:
     """Generate a BOM CSV from a Mermaid flowchart file.
 
@@ -71,7 +70,7 @@ def generate_bom(
     output_path = Path(output_file)
 
     # Read and parse Mermaid diagram
-    with open(mermaid_path, "r", encoding="utf-8") as f:
+    with open(mermaid_path, encoding="utf-8") as f:
         content = f.read()
 
     diagram = parse_mermaid(content)
