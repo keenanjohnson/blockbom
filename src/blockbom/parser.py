@@ -1,7 +1,6 @@
 """Mermaid flowchart parser."""
 
 import re
-from typing import Optional
 
 from .exceptions import InvalidDiagramError
 from .models import Edge, Node, NodeShape, ParsedDiagram, Subgraph
@@ -14,14 +13,10 @@ class MermaidParser:
     FRONTMATTER_PATTERN = re.compile(r"^---\s*\n.*?\n---\s*\n", re.DOTALL)
 
     # Diagram type and direction
-    DIAGRAM_PATTERN = re.compile(
-        r"^\s*(?:graph|flowchart)\s+(TD|TB|BT|RL|LR)\s*$", re.MULTILINE
-    )
+    DIAGRAM_PATTERN = re.compile(r"^\s*(?:graph|flowchart)\s+(TD|TB|BT|RL|LR)\s*$", re.MULTILINE)
 
     # Subgraph patterns
-    SUBGRAPH_START = re.compile(
-        r'^\s*subgraph\s+(\w+)(?:\s*\["([^"]+)"\])?\s*$', re.MULTILINE
-    )
+    SUBGRAPH_START = re.compile(r'^\s*subgraph\s+(\w+)(?:\s*\["([^"]+)"\])?\s*$', re.MULTILINE)
     SUBGRAPH_END = re.compile(r"^\s*end\s*$", re.MULTILINE)
 
     # HTML tag stripper
@@ -84,9 +79,7 @@ class MermaidParser:
             )
         return match.group(1)
 
-    def _parse_subgraphs(
-        self, content: str
-    ) -> tuple[list[Subgraph], list[tuple[int, int, str]]]:
+    def _parse_subgraphs(self, content: str) -> tuple[list[Subgraph], list[tuple[int, int, str]]]:
         """Parse subgraph definitions and return their content ranges."""
         subgraphs: list[Subgraph] = []
         ranges: list[tuple[int, int, str]] = []  # (start, end, subgraph_id)
@@ -99,7 +92,7 @@ class MermaidParser:
             return subgraphs, ranges
 
         # Match starts with ends using a stack
-        stack: list[tuple[re.Match, Subgraph]] = []
+        stack: list[tuple[re.Match[str], Subgraph]] = []
         all_matches = []
 
         for m in starts:

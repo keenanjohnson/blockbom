@@ -28,7 +28,7 @@ class MetadataLoader:
             return {}
 
         try:
-            with open(yaml_path, "r", encoding="utf-8") as f:
+            with open(yaml_path, encoding="utf-8") as f:
                 data: dict[str, Any] = yaml.safe_load(f) or {}
         except yaml.YAMLError as e:
             raise MetadataError(f"Failed to parse YAML metadata: {e}") from e

@@ -2,7 +2,6 @@
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Optional
 
 
 class NodeShape(Enum):
@@ -36,7 +35,7 @@ class Edge:
 
     source_id: str
     target_id: str
-    label: Optional[str] = None
+    label: str | None = None
 
 
 @dataclass
@@ -47,16 +46,16 @@ class Subgraph:
     title: str
     node_ids: list[str] = field(default_factory=list)
     children: list["Subgraph"] = field(default_factory=list)
-    parent_id: Optional[str] = None
+    parent_id: str | None = None
 
 
 @dataclass
 class PartMetadata:
     """Metadata for a part from YAML file."""
 
-    part_number: Optional[str] = None
-    link: Optional[str] = None
-    cost: Optional[float] = None
+    part_number: str | None = None
+    link: str | None = None
+    cost: float | None = None
 
 
 @dataclass
@@ -68,7 +67,7 @@ class BOMItem:
     description: str
     part_number: str = ""
     purchase_link: str = ""
-    cost: Optional[float] = None
+    cost: float | None = None
 
 
 @dataclass
