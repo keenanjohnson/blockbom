@@ -118,7 +118,7 @@ for node_id, node in diagram.nodes.items():
 
 ```bash
 # Clone and install
-git clone https://github.com/keen/blockbom.git
+git clone https://github.com/keenanjohnson/blockbom.git
 cd blockbom
 uv sync --dev
 
