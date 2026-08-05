@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.3.0 — 2026-08-05
+
+### Added
+- **`blockbom edit` — the visual editor** (Phase 2). A local web app for
+  editing a project:
+  - React Flow canvas with the hierarchy as nested groups, auto-laid-out
+    with ELK; drag a block into an assembly (or onto empty canvas) to
+    re-parent it; draw connections between block handles; delete blocks and
+    connections with the keyboard.
+  - Inspector panel for the selected block (name, qty, part reference,
+    inline cost/weight/link) or connection (label).
+  - Table view: spreadsheet-style bulk editing of all components and the
+    parts library, including part-number renames that update every reference.
+  - Header shows live rollups (cost, weight, part count) and validation
+    problems; Save (or Cmd/Ctrl-S) writes `project.yaml` through the same
+    pydantic models the CLI uses — git remains the version mechanism.
+- FastAPI backend (`GET/PUT /api/project`) behind the `blockbom[edit]`
+  extra; the base install stays dependency-light.
+- Frontend lives in `frontend/` (Vite + React); built assets ship inside the
+  wheel, so `pip install 'blockbom[edit]'` needs no Node at install time.
+
 ## 0.2.0 — 2026-08-05
 
 blockbom grows from a Mermaid→CSV converter into a tool for designing

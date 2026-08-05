@@ -142,15 +142,18 @@ Engine remains a pure library with no UI knowledge.
 editor with `blockbom watch` preview alongside → `blockbom export --xlsx` →
 commit. Iterate.
 
-## Phase 2 — visual editor
+## Phase 2 — visual editor ✅ (implemented, v0.3.0)
 
 - `blockbom edit`: FastAPI backend (behind `blockbom[edit]` extra) serving a
   React Flow canvas — nested groups mirror the hierarchy, drag-to-reparent,
   draw connections — plus a spreadsheet-style table for bulk metadata editing.
-- All edits write `project.yaml` through the same models (comments preserved
-  via ruamel). Git stays the save/version mechanism.
-- Frontend lives in `frontend/`, built assets ship in the wheel.
-- Revisit stored node positions only if auto-layout proves insufficient.
+- All edits write `project.yaml` through the same models. Git stays the
+  save/version mechanism. (Comment preservation on GUI saves is still open —
+  saves currently re-emit canonical YAML without comments.)
+- Frontend lives in `frontend/` (Vite + React + @xyflow/react + elkjs);
+  built assets ship in the wheel via hatch `artifacts`.
+- Auto-layout via ELK; no stored positions. Revisit only if it proves
+  insufficient in use.
 
 ## Phase 3 — polish (as needed)
 

@@ -146,6 +146,23 @@ def cmd_watch(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_edit(args: argparse.Namespace) -> int:
+    """Serve the visual editor."""
+    if not Path(args.project).exists():
+        print(f"error: file not found: {args.project}", file=sys.stderr)
+        return 1
+    try:
+        from .server import serve_editor
+    except ImportError:
+        print(
+            "error: the editor needs extra dependencies: pip install 'blockbom[edit]'",
+            file=sys.stderr,
+        )
+        return 1
+    serve_editor(args.project, port=args.port, open_browser=not args.no_open)
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="blockbom",
@@ -182,6 +199,12 @@ def build_parser() -> argparse.ArgumentParser:
     p_watch.add_argument("--port", type=int, default=8351, help="port to serve on")
     p_watch.add_argument("--no-open", action="store_true", help="do not open the browser")
     p_watch.set_defaults(func=cmd_watch)
+
+    p_edit = subparsers.add_parser("edit", help="visual editor: diagram canvas + BOM table")
+    p_edit.add_argument("project", help="path to project.yaml")
+    p_edit.add_argument("--port", type=int, default=8352, help="port to serve on")
+    p_edit.add_argument("--no-open", action="store_true", help="do not open the browser")
+    p_edit.set_defaults(func=cmd_edit)
 
     return parser
 

@@ -43,7 +43,7 @@ from .project import (
 )
 from .rollup import consolidated_bom, indented_bom, project_rollup
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 __all__ = [
     # Project workflow

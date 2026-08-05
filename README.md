@@ -101,6 +101,20 @@ Notes:
 - Missing data is visible, never silently zero: totals show
   `>= 123.40 (incomplete)` when some parts lack a cost or weight.
 
+## The visual editor
+
+```bash
+pip install 'blockbom[edit]'
+blockbom edit project.yaml
+```
+
+A local web app for editing the project: a diagram canvas (drag blocks
+between assemblies to restructure, draw connections between blocks, auto-
+layout keeps things tidy) with an inspector for the selected block, plus a
+table view for bulk-editing components and the parts library. The header
+shows live cost/weight/part-count rollups and validation problems. Save
+(Cmd/Ctrl-S) writes `project.yaml` — commit it with git like any other file.
+
 ## Commands
 
 | Command | What it does |
@@ -110,6 +124,7 @@ Notes:
 | `blockbom check project.yaml` | Validate schema + references (dangling parts, duplicate ids) |
 | `blockbom export project.yaml --xlsx bom.xlsx` | Export (also `--csv`, `--consolidated`, `--mmd`) |
 | `blockbom watch project.yaml` | Live preview server (diagram, rollups, BOM) |
+| `blockbom edit project.yaml` | Visual editor (needs the `edit` extra) |
 
 Exports:
 
@@ -162,6 +177,18 @@ uv run pytest            # tests
 uv run mypy src/blockbom # type checking
 uv run ruff check src/blockbom && uv run ruff format --check src/blockbom
 ```
+
+Editor frontend (only needed when working on `blockbom edit`):
+
+```bash
+cd frontend
+npm install
+npm run build   # builds into src/blockbom/_static (shipped in the wheel)
+npm run dev     # dev server with hot reload, proxies /api to :8352
+```
+
+For hot reload, run `uv run blockbom edit project.yaml --no-open` in one
+terminal and `npm run dev` in another, then open the Vite URL.
 
 The roadmap (visual editor, BOM diffs between git revisions, supplier API
 enrichment) lives in [PLAN.md](PLAN.md).

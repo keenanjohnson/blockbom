@@ -84,8 +84,20 @@ jobs:
       - name: Set up Python
         run: uv python install 3.11
 
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Build editor frontend
+        run: npm ci && npm run build
+        working-directory: frontend
+
       - name: Build package
         run: uv build
+
+      - name: Check wheel contains editor assets
+        run: unzip -l dist/*.whl | grep -q "_static/index.html"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
