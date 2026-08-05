@@ -1,7 +1,7 @@
 [project]
 name = "blockbom"
-version = "0.1.0"
-description = "Generate hierarchical BOMs from Mermaid flowchart diagrams"
+version = "0.2.0"
+description = "Design block-diagram + BOM combos for hardware prototypes"
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.11"
@@ -20,7 +20,13 @@ classifiers = [
 
 dependencies = [
     "pyyaml>=6.0",
+    "pydantic>=2.0",
+    "ruamel.yaml>=0.18",
+    "openpyxl>=3.1",
 ]
+
+[project.scripts]
+blockbom = "blockbom.cli:main"
 
 [project.urls]
 Homepage = "https://github.com/keenanjohnson/blockbom"
@@ -34,6 +40,7 @@ dev = [
     "ruff>=0.1.0",
     "mypy>=1.0",
     "types-PyYAML>=6.0",
+    "types-openpyxl>=3.1",
 ]
 
 [build-system]

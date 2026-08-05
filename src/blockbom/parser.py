@@ -22,14 +22,17 @@ class MermaidParser:
     # HTML tag stripper
     HTML_TAG_PATTERN = re.compile(r"<[^>]+>")
 
+    # Source node: id with optional inline definition, e.g. n12["Outland Power"]
+    _EDGE_SOURCE = r"(\w+)(?:\[[^\]]*\]|\([^)]*\)|\{[^}]*\})?"
+
     # Edge patterns - order matters (more specific first)
     EDGE_PATTERNS = [
         # A -->|label| B
-        re.compile(r"(\w+)\s*-->\|([^|]+)\|\s*(\w+(?:\s*&\s*\w+)*)"),
+        re.compile(_EDGE_SOURCE + r"\s*-->\|([^|]+)\|\s*(\w+(?:\s*&\s*\w+)*)"),
         # A -- label --> B
-        re.compile(r"(\w+)\s*--\s*([^-][^>]*?)\s*-->\s*(\w+(?:\s*&\s*\w+)*)"),
+        re.compile(_EDGE_SOURCE + r"\s*--\s*([^-][^>]*?)\s*-->\s*(\w+(?:\s*&\s*\w+)*)"),
         # A --> B (simple, no label)
-        re.compile(r"(\w+)\s*-->\s*(\w+(?:\s*&\s*\w+)*)"),
+        re.compile(_EDGE_SOURCE + r"\s*-->\s*(\w+(?:\s*&\s*\w+)*)"),
     ]
 
     def parse(self, content: str) -> ParsedDiagram:
@@ -110,6 +113,10 @@ class MermaidParser:
                 stack.append((match, sg))
             elif match_type == "end" and stack:
                 start_match, sg = stack.pop()
+                if stack:
+                    parent = stack[-1][1]
+                    sg.parent_id = parent.id
+                    parent.children.append(sg)
                 subgraphs.append(sg)
                 ranges.append((start_match.end(), match.start(), sg.id))
 
@@ -231,7 +238,10 @@ class MermaidParser:
                 continue
 
             for pattern in self.EDGE_PATTERNS:
-                for match in pattern.finditer(line):
+                matches = list(pattern.finditer(line))
+                if not matches:
+                    continue
+                for match in matches:
                     groups = match.groups()
 
                     if len(groups) == 3:
@@ -289,6 +299,11 @@ class MermaidParser:
                             seen_edges.add(edge_key)
                             edges.append(Edge(source_id=source, target_id=target, label=label))
 
+                # Stop after the first pattern that matches: the remaining,
+                # more general patterns would re-match fragments of the same
+                # edge text (e.g. "V --> B" inside "A -- 15 V --> B").
+                break
+
         return edges
 
     def _associate_nodes_to_subgraphs(
@@ -298,9 +313,15 @@ class MermaidParser:
         subgraphs: list[Subgraph],
         ranges: list[tuple[int, int, str]],
     ) -> None:
-        """Associate nodes with their parent subgraphs based on content position."""
+        """Associate nodes with their parent subgraphs based on content position.
+
+        A node inside nested subgraphs is assigned only to the innermost one.
+        """
         # Create a map of subgraph_id to subgraph
         sg_map = {sg.id: sg for sg in subgraphs}
+
+        # (range size, sg_id) of the innermost matching subgraph per node
+        innermost: dict[str, tuple[int, str]] = {}
 
         for start, end, sg_id in ranges:
             subgraph_content = content[start:end]
@@ -311,5 +332,10 @@ class MermaidParser:
                 # Look for the node ID followed by node syntax or at line start
                 pattern = re.compile(rf"^\s*{re.escape(node_id)}[\[@\[\(\{{]", re.MULTILINE)
                 if pattern.search(subgraph_content):
-                    if node_id not in sg_map[sg_id].node_ids:
-                        sg_map[sg_id].node_ids.append(node_id)
+                    size = end - start
+                    if node_id not in innermost or size < innermost[node_id][0]:
+                        innermost[node_id] = (size, sg_id)
+
+        for node_id, (_, sg_id) in innermost.items():
+            if node_id not in sg_map[sg_id].node_ids:
+                sg_map[sg_id].node_ids.append(node_id)

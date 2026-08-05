@@ -1,32 +1,74 @@
 """
-blockbom - Generate BOMs from Mermaid flowchart diagrams.
+blockbom - Design block-diagram + BOM combos for hardware prototypes.
 
-Example usage:
+A project lives in a single project.yaml (hierarchy, connections, parts
+library). Load it, compute rollups, and export BOMs:
+
+    from blockbom import load_project, indented_bom, consolidated_bom
+
+    project = load_project("project.yaml")
+    for row in consolidated_bom(project):
+        print(row.part_number, row.total_qty)
+
+The original Mermaid -> CSV path still works:
+
     from blockbom import generate_bom
-
-    # Simple usage
-    items = generate_bom("diagram.mmd", "output.csv")
-
-    # With metadata
     items = generate_bom("diagram.mmd", "output.csv", "parts.yaml")
 """
 
 from pathlib import Path
 
 from .exceptions import BlockBomError, InvalidDiagramError, MetadataError, ParseError
+from .export import (
+    emit_mermaid,
+    export_consolidated_csv,
+    export_indented_csv,
+    export_mermaid,
+    export_xlsx,
+)
 from .exporter import CSVExporter
 from .hierarchy import HierarchyBuilder
+from .importer import diagram_to_project
 from .metadata import MetadataLoader
 from .models import BOMItem, Edge, Node, ParsedDiagram, PartMetadata, Subgraph
 from .parser import MermaidParser
+from .project import (
+    Component,
+    Connection,
+    Part,
+    Project,
+    load_project,
+    save_project,
+    validate_project,
+)
+from .rollup import consolidated_bom, indented_bom, project_rollup
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
-    # Main functions
+    # Project workflow
+    "Project",
+    "Component",
+    "Connection",
+    "Part",
+    "load_project",
+    "save_project",
+    "validate_project",
+    # Rollups
+    "indented_bom",
+    "consolidated_bom",
+    "project_rollup",
+    # Import / export
+    "diagram_to_project",
+    "export_indented_csv",
+    "export_consolidated_csv",
+    "export_xlsx",
+    "export_mermaid",
+    "emit_mermaid",
+    # Mermaid -> CSV compatibility path
     "generate_bom",
     "parse_mermaid",
-    # Models
+    # Legacy models
     "BOMItem",
     "Edge",
     "Node",

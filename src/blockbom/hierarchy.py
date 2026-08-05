@@ -27,9 +27,11 @@ class HierarchyBuilder:
         # Count node references (for quantity)
         quantities = self._count_quantities()
 
-        # Process subgraphs first (they become parent assemblies)
+        # Process root subgraphs first (they become parent assemblies);
+        # nested subgraphs are handled recursively via their parent.
         for subgraph in self.diagram.subgraphs:
-            bom_items.extend(self._process_subgraph(subgraph, 0, quantities))
+            if subgraph.parent_id is None:
+                bom_items.extend(self._process_subgraph(subgraph, 0, quantities))
 
         # Process root-level nodes (not in any subgraph)
         for node_id in self.diagram.root_node_ids:

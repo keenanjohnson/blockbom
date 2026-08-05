@@ -1,0 +1,126 @@
+blockbom: 1
+name: sample
+components:
+  - id: s1
+    name: 1 Liter Enclosure
+    children:
+      - id: A
+        name: Current Monitor INA238
+        part: INA238AIDGSR
+      - id: B
+        name: Voltage Boost Converter
+        part: MT3608
+      - id: C
+        name: Screw Terminal Block
+        part: TB-2504
+      - id: n1
+        name: RiPi Pico 2 Microcontroller
+        part: SC0918
+      - id: n3
+        name: LED 1 Wetlink Penetrator
+      - id: n5
+        name: LED 3 Wetlink Penetrator
+      - id: n4
+        name: LED 2 Wetlink Penetrator
+      - id: n6
+        name: LED 4 Wetlink Penetrator
+      - id: n11
+        name: Outland Welink Penetrator
+      - id: n13
+        name: BlueROV Control Wetlink Penetrator
+      - id: n15
+        name: 5V Voltage Converter
+        part: LM2596
+  - id: n7
+    name: LED 1
+  - id: n8
+    name: LED 3
+  - id: n9
+    name: LED 2
+  - id: n10
+    name: LED 4
+  - id: n12
+    name: Outland Power
+  - id: n14
+    name: BlueROV Controller
+connections:
+  - from: A
+    to: B
+    label: 15 V
+  - from: B
+    to: C
+    label: 24 V
+  - from: A
+    to: n1
+    label: I2C
+  - from: C
+    to: n3
+    label: 24 V
+  - from: C
+    to: n5
+    label: 24 V
+  - from: C
+    to: n4
+    label: 24V
+  - from: C
+    to: n6
+    label: 24V
+  - from: n1
+    to: n3
+    label: Serial Control
+  - from: n1
+    to: n4
+    label: Serial Control
+  - from: n1
+    to: n5
+    label: Serial Control
+  - from: n1
+    to: n6
+    label: Serial Control
+  - from: n3
+    to: n7
+  - from: n5
+    to: n8
+  - from: n4
+    to: n9
+  - from: n6
+    to: n10
+  - from: n11
+    to: A
+    label: 15V
+  - from: n12
+    to: n11
+    label: 15V
+  - from: n13
+    to: n1
+    label: Serial Control
+  - from: n14
+    to: n13
+    label: Serial
+  - from: n15
+    to: n1
+    label: 5V
+  - from: A
+    to: n15
+    label: 15V
+parts:
+  INA238AIDGSR:
+    description: Current Monitor INA238
+    link: https://www.ti.com/product/INA238
+    cost: 2.85
+  MT3608:
+    description: Voltage Boost Converter
+    link: https://www.amazon.com/dp/B07XXXXX
+    cost: 5.99
+  TB-2504:
+    description: Screw Terminal Block
+    link: https://www.digikey.com/...
+    cost: 1.5
+  SC0918:
+    description: RiPi Pico 2 Microcontroller
+    link: https://www.raspberrypi.com/products/raspberry-pi-pico-2/
+    cost: 5.0
+  LM2596:
+    description: 5V Voltage Converter
+    link: https://www.amazon.com/dp/...
+    cost: 3.5
